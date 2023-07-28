@@ -42,8 +42,7 @@ class GradeCalculator extends JFrame implements ActionListener {
 	JLabel lt, lg, lG, l1, l2, l3, l4, l5, l6;
 	JTextField t1, t2, t3, t4, t5;
 	JPanel p1, p2, p3, p4, p5, p6, p7, p8, p9;
-
-	public GradeCalculator(String title) {
+public GradeCalculator(String title) {
 		super(title);
 		contentPane = this.getContentPane();
 
@@ -134,20 +133,25 @@ class GradeCalculator extends JFrame implements ActionListener {
 			cta = Integer.parseInt(t4.getText());
 			see = Integer.parseInt(t5.getText());
 		} catch (NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(this, "IA marks should be <=20.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Invalid Input Type", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
+		try{
 		if (ia1 < 0 || ia1 > 20 || ia2 < 0 || ia2 > 20 || ia3 < 0 || ia3 > 20) {
-			JOptionPane.showMessageDialog(this, "Invalid IA marks", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			throw new IAException();
+		}
+	    }catch(IAException iae){
+			JOptionPane.showMessageDialog(this, iae, "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
-
+		try{
 		if (cta < 0 || cta > 10) {
-			JOptionPane.showMessageDialog(this, "Invalid CTA marks", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+			throw new CTAException();
+		}
+		}catch(CTAException ctae){
+			JOptionPane.showMessageDialog(this,ctae, "Invalid Input", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
-
-		else {
 
 			int minimum = ia1;
 			if (ia2 < minimum)
@@ -157,15 +161,22 @@ class GradeCalculator extends JFrame implements ActionListener {
 			else
 				minimum = ia1;
 			cie = ia1 + ia2 + ia3 - minimum + cta;
-		}
+		try{
 		if (cie < 20) {
-			JOptionPane.showMessageDialog(this, "Student is Detained", "Error", JOptionPane.ERROR_MESSAGE);
+			throw new CIEException();
+		}
+	 	}catch(CIEException ciee){
+			JOptionPane.showMessageDialog(this, ciee, "Error", JOptionPane.ERROR_MESSAGE);
 			return -1;
-		} else {
+		}
+		try{
 			if (see < 38 ) {
-				JOptionPane.showMessageDialog(this, "F grade", "Warning", JOptionPane.ERROR_MESSAGE);
-				return -1;
+				throw new SEEException();
 			}
+		}catch(SEEException seee){
+			JOptionPane.showMessageDialog(this, "F grade", "Warning", JOptionPane.ERROR_MESSAGE);
+				return -1;
+		}
 			if (see > 100 ) {
 				JOptionPane.showMessageDialog(this, "Invalid SEE marks", "Invalid Input", JOptionPane.ERROR_MESSAGE);
 				return -1;
@@ -179,7 +190,7 @@ class GradeCalculator extends JFrame implements ActionListener {
 				see = (see + 1) / 2;
 			int total = cie + see;
 			return total;
-		}
+
 	}
 
 	String grade(int a) {
